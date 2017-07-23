@@ -1,0 +1,47 @@
+function updateSVGTest(person) {
+
+    var t = d3.transition()
+        .duration(750);
+
+    alert(person);
+    var x = d3.scaleBand()
+        .range([0, width])
+        .padding(0.1);
+    var y = d3.scaleLinear()
+        .range([height, 0]);
+
+    var rows;
+
+    d3.csv("sales" + person + ".csv", function (error, data) {
+        if (error) throw error;
+        // format the data
+        data.forEach(function (d) {
+            d.sales = +d.sales;
+        });
+        x.domain(data.map(function(d) { return d.salesperson; }));
+        y.domain([0, d3.max(data, function(d) { return d.sales; })]);
+		var datarect = d3.select(".barstyle2").selectAll("rect").data(data);
+
+
+
+        datarect.enter().append("rect")
+			.merge(datarect)
+			.transition(t)
+            .attr("x", function (d) {
+                return x(d.salesperson);
+            })
+            .attr("width", x.bandwidth())
+            .attr("y", function (d) {
+                return y(d.sales);
+            })
+            .attr("height", function (d) {
+                return height - y(d.sales);
+            });
+
+        datarect.exit().transition(t).remove();
+
+
+        // get the data
+    });
+
+}

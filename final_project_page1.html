@@ -6,7 +6,7 @@
 
 
 	.barstyle1 {
-		position: relative;
+		position: relative
 	}
 	.piestyle1 {
 		position: relative;
@@ -14,6 +14,7 @@
 	}
 	.legend1 {
 		position: relative;
+		width:250;
 	}
 		.page1 {
 			height: 20px
@@ -95,6 +96,13 @@
 			height: 100px;
 	}
 
+	.tdstyle {
+		font-style: Courier
+	}
+	table.pieannotation td {
+		font-size: 75%;
+	}
+
 	</style>
 
 </head>
@@ -129,18 +137,21 @@
 				The visualation follows the interactive slide-show theme. The breaches for each year
 				represents a scene. The current scene is indicated by the highlight on the navigation
 				button. The bar graphs represent the percentage of overall breaches for the year by
-				organization type (e.g Web, Retail etc.)The pie chart shows how the data breaches occcurred.
+				organization type (e.g Web, Retail etc.)The pie chart shows how the data breaches occcurred.<br>
+				The user is free to choose any year to see the visualization. Within each year, the bar graph allows for interaction.
 				<br><br>
 				There are multiple <b>triggers</b> in each scene. Clicking/Hovering on a bar makes a table appear that displays
-				the actual breaches for each company/entity and the number of records(customer data items) that
+				the actual breaches for each company and the number of records(customer data items) that
 				were breached.  Moving on to any other bar clears the previous bar's data and shows the current bar information.
-				The table of entity/records will not clear on mouse-out as the table can have many reocords that require scrolling.
+				The table of entity/records will not clear on mouse-out as the table can have many records that require scrolling.
 				To clear a table manually, simply click on the year button to refresh the page.
 				<br><br>
 				The <b>parameter</b> for each scene is the year. Clicking on the year button on top of the page
 				alters the visualization to show data for the selected year
 				<br><br>
 				The <b>annotation</b> for the pie-chart indicates that hacking is the most common method of stealing information.
+				<br><br><br>
+				CLICK ANYWHERE IN THIS BOX TO CLOSE
 
 			</span>
 			</div>
@@ -175,9 +186,29 @@
 		<tr>
 			<td>
 			<table>
+				<tr><td id="dynYear" align="right"><b>2013</b></td></tr>
 				<tr>
 					<td><div class="piestyle1"></div></td>
 					<td><div class="legend1"></div></td>
+					<td>
+						<table class="pieannotation">
+							<tr>
+								<td>
+									Hacking remains the most widely<br>
+									used method to steal information.<br>
+									A combination of malware and <br>
+									clever social engineering/phishing<br>
+									(e.g tricking people into clicking <br>
+									malicious links in emails) results <br>
+									in a network compromise and <br>
+									eventually exfiltration of critical <br>
+									data that then is possible used <br>
+									to extort money from the companies.
+
+								</td>
+							</tr>
+						</table>
+					</td>
 				</tr>
 			</table>
 			</td>
@@ -243,7 +274,7 @@
          .attr("height", 100);
 
  holder.append("a")
-     .attr("xlink:href", "javascript:currYear='2013';updateSVGTest('2013');updatePie('2013');clearLinesAndAnnotations();")
+     .attr("xlink:href", "javascript:currYear='2013';updateSVGTest('2013');updatePie('2013');clearLinesAndAnnotations();updateYear();")
 	 .append("rect")
      .attr("x", 50)
      .attr("y", 2)
@@ -264,7 +295,7 @@
      .attr("x", 80)
      .attr("y", 14)
      .style("fill", "black")
-     .style("font-size", "15px")
+     .style("font-size", "20px")
      .attr("dy", ".35em")
      .attr("text-anchor", "top")
      .style("pointer-events", "none")
@@ -273,7 +304,7 @@
 
 
  holder.append("a")
-     .attr("xlink:href", "javascript:currYear='2014';updateSVGTest('2014');updatePie('2014');clearLinesAndAnnotations();")
+     .attr("xlink:href", "javascript:currYear='2014';updateSVGTest('2014');updatePie('2014');clearLinesAndAnnotations();updateYearText();updateYear();")
      .append("rect")
      .attr("x", 150)
      .attr("y", 2)
@@ -293,7 +324,7 @@
      .attr("x", 175)
      .attr("y", 14)
      .style("fill", "black")
-     .style("font-size", "15px")
+     .style("font-size", "20px")
      .attr("dy", ".35em")
      .attr("text-anchor", "top")
      .style("pointer-events", "none")
@@ -308,6 +339,8 @@ var margin = {top: 10, right: 20, bottom: 30, left: 40},
  drawButtons();
  drawPage1();
  updateSVGTest('2013');
+ //   drawPieLine();
+ drawLine(x(d.organization_type), y(d.total), 40,20);
 
 
 
@@ -398,7 +431,7 @@ function drawPage1() {
                 "translate(" + (width / 2) + " ," +
                 (height + margin.top + 17) + ")")
             .style("text-anchor", "middle")
-            .style("font-size", "12px")
+            .style("font-size", "14px")
             .style("font-style", "bold")
             .text("Organization Type");
 
@@ -408,10 +441,11 @@ function drawPage1() {
             .attr("x", 0 - (height / 2))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
-            .style("font-size", "12px")
+            .style("font-size", "15px")
             .text("Percentage of All Breaches");
 
         svg1.append("text")
+			.attr("id","yeartext")
             .attr("x", (width / 2))
             .attr("y", 0 - ((margin.top - 40) / 2))
             .attr("text-anchor", "middle")
@@ -529,6 +563,14 @@ function drawPage1() {
             })
             .style("stroke", "black")
             .attr("dy", "1em");
+
+        var barAn = d3.select(".legend1").select("svg");
+        barAn.append("svg:line")
+            .attr("x1", 125).attr("y1",130)
+            .attr("x2", 250).attr("y2", 130)
+            .style("stroke", "steelblue")
+            .style("stroke-width", 1);
+
     });
 
 }
@@ -541,7 +583,7 @@ function updateSVGTest(year) {
         height = 200;
 
     var t = d3.transition()
-        .duration(750);
+        .duration(250);
 
     var x = d3.scaleBand()
         .range([0, width])
@@ -782,12 +824,19 @@ function updateSVGTest(year) {
              .text(function(d) { return d; })
              .style("stroke","black")
              .attr("dy", "1em");
+
+         var barAn = d3.select(".legend1").select("svg");
+         barAn.append("svg:line")
+             .attr("x1", 125).attr("y1",130)
+             .attr("x2", 250).attr("y2", 130)
+             .style("stroke", "steelblue")
+             .style("stroke-width", 1);
      });
 
  }
 
 function showMethodDetails(method) {
-    alert('test');
+  //  alert('test');
 }
 
 function showTable(currYear,orgType) {
@@ -799,21 +848,23 @@ function showTable(currYear,orgType) {
             var container = d3.select(".description")
                 .append("table")
                     .attr("style", "margin-left: 0px")
+					.attr("class","entity-table")
                     .style("border-collapse", "collapse")// <= Add this line in
                     .style("border", "2px black solid") // <= Add this line in
                 .selectAll("tr")
                 .data(parsedCSV).enter()
                 .append("tr")
-				.attr("first-child","font-weight: bold")
                 .selectAll("td")
                 .data(function(d) { return d; }).enter()
                 .append("td")
+                .attr("first-child","font-weight: bold")
                 .attr("style", "border: thin dotted;")
                 .text(function(d) { return d; })
 				.attr("font-style","bold");
         });
 
 }
+
 
 
 function drawLine(barx, bary, xMargin, barWidth) {
@@ -823,8 +874,20 @@ function drawLine(barx, bary, xMargin, barWidth) {
         .attr("x1", barx + xMargin + barWidth).attr("y1", bary + 10)
         .attr("x2", 550).attr("y2", 50)
         .style("stroke", "steelblue")
-        .style("stroke-width", 3);
+        .style("stroke-width", 2);
 }
+
+
+function drawPieLine() {
+
+       var svg = d3.select(".legend1").select("svg");
+        svg.append("svg:line")
+            .attr("x1", 100).attr("y1",100)
+            .attr("x2", 400).attr("y2", 100)
+            .style("stroke", "steelblue")
+            .style("stroke-width", 3);
+    }
+
 
 function clearLinesAndAnnotations() {
     clearLines();
@@ -833,6 +896,15 @@ function clearLinesAndAnnotations() {
 
  function clearLines() {
      d3.select(".barstyle1").selectAll("line").remove();
+ }
+
+ function updateYearText() {
+     var svgText = d3.select(".barstyle1").select("svg");
+     svgText.selectAll("text").select("yeartext").attr("text",currYear);
+ }
+
+ function updateYear() {
+     document.getElementById("dynYear").innerHTML= "<b>" + currYear + "</b>";
  }
 
 </script>
