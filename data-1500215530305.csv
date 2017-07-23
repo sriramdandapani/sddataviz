@@ -1,0 +1,4 @@
+"ERROR:  syntax error at or near "copy"
+LINE 1: ...ARE "CURSOR:CONN:5630284" CURSOR WITHOUT HOLD FOR copy breac...
+                                                             ^
+"
